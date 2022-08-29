@@ -44,28 +44,28 @@ class User extends \Core\Model {
 
     public function validate(){
         if($this -> name == ''){
-            $this -> errors[] = 'Name is required';
+            $this -> errors[] = 'Login jest wymagany';
         }
 
         if(filter_var($this -> email, FILTER_VALIDATE_EMAIL) === false){
-            $this -> errors[] = 'Invalid email';
+            $this -> errors[] = 'Nieprawid&lstrok;owy adres email';
         }
 
         if(static::emailExists($this -> email, $this -> id ?? null)){
-            $this -> errors[] = 'Email already taken';
+            $this -> errors[] = 'Adres email w u&zdot;yciu';
         }
 
         if(isset($this -> password)){
             if(strlen($this -> password) < 6){
-                $this -> errors[] = 'Please enter at least 6 characters for the password';
+                $this -> errors[] = 'Has&lstrok;o musi si&eogon; sk&lstrok;ada&cacute; z conajmniej 6 znak&oacute;w';
             }
 
             if(preg_match('/.*[a-z]+.*/i', $this -> password) == 0){
-                $this -> errors[] = 'Password needs at least one letter';
+                $this -> errors[] = 'Has&lstrok;o musi zawiera&cacute; co najmniej jedn&aogon; liter&eogon;';
             }
 
             if(preg_match('/.*\d+.*/i', $this -> password) == 0){
-                $this -> errors[] = 'Password needs at least one number';
+                $this -> errors[] = 'Has&lstrok;o musi zawiera&cacute; co najmniej jedn&aogon; cyfr&eogon;';
             }
         } 
     }

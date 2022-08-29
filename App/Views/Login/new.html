@@ -1,24 +1,25 @@
 {% extends "base.html" %}
 
-{% block title %}Log in{% endblock %}
+{% block title %}Logowanie{% endblock %}
 
 {% block body %}
-    <h1>Log in</h1>
-    
+    <h1>Logowanie</h1>
+        
     <form action="/login/create" method="post">
         <div class="form-group">
-            <label for="inputEmail">Email address</label>
-            <input type="email" id="inputEmail" name="email" placeholder="Email address" autofocus value="{{ email }}" class="form-control">
+            <label for="inputEmail">Adres email</label>
+            <input type="email" id="inputEmail" name="email" placeholder="Adres email" autofocus value="{{ email }}" class="form-control">
         </div>
         <div class="form-group">
-            <label for="inputPassword">Password</label>
-            <input type="password" id="inputPassword" name="password" placeholder="Password" class="form-control">
+            <label for="inputPassword">Hasło</label>
+            <input type="password" id="inputPassword" name="password" placeholder="Hasło" class="form-control">
         </div>
         <div class="checkbox">
             <input type="checkbox" id="remember_me" name="remember_me" {% if remember_me %} checked="checked" {% endif %}>
-            <label for="remember_me"> Remember me</label>
+            <label for="remember_me"> Zapamiętaj mnie</label>
         </div>
-        <button type="submit" class="btn btn-default">Log in</button>
-        <a href="/password/forgot">Forgot password?</a>
+        <button type="submit" class="btn btn-dark">Zaloguj się</button>
+        <a href="/signup/new">Nie masz konta? Za&lstrok;&oacute;&zdot; nowe.</a>
+        <p><a href="/password/forgot">Zapomniałeś hasła?</a></p>
     </form>
 {% endblock %}
