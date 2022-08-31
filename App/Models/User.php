@@ -42,6 +42,10 @@ class User extends \Core\Model {
         return false;
     }
 
+    protected function addUserTables(){
+        
+    }
+
     public function validate(){
         if($this -> name == ''){
             $this -> errors[] = 'Login jest wymagany';
@@ -179,7 +183,7 @@ class User extends \Core\Model {
         $text = View::getTemplate('Password/reset_email.txt', ['url' => $url]);
         $html = View::getTemplate('Password/reset_email.html', ['url' => $url]);
 
-        Mail::send($this -> email, 'Password reset', $text, $html);
+        Mail::send($this -> email, 'Zmiana has&lstrok;a', $text, $html);
     }
 
     public static function findByPasswordReset($token){
@@ -238,7 +242,7 @@ class User extends \Core\Model {
         $text = View::getTemplate('Signup/activation_email.txt', ['url' => $url]);
         $html = View::getTemplate('Signup/activation_email.html', ['url' => $url]);
 
-        Mail::send($this -> email, 'Account activation', $text, $html);
+        Mail::send($this -> email, 'Aktywacja konta', $text, $html);
     }
 
     public static function activate($value){
