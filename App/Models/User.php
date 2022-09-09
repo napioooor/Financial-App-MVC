@@ -36,14 +36,50 @@ class User extends \Core\Model {
             $stmt -> bindValue(':password_hash', $password_hash, PDO::PARAM_STR);
             $stmt -> bindValue(':activation_hash', $hashed_token, PDO::PARAM_STR);
 
+            $stmt -> execute();
+
+            //get last user ID
+
+            $sql = 'SELECT id FROM users ORDER BY ID DESC LIMIT 1';
+            $stmt = $db -> prepare($sql);
+
+            $stmt->setFetchMode(PDO::FETCH_NUM);
+
+            $stmt -> execute();
+
+            $table = $stmt -> fetch();
+
+            $id = $table[0];
+
+            $sql = 'INSERT INTO expense_category (name, user_id) SELECT name, :user_id AS user_id FROM expense_category_default';
+
+            $db = static::getDB();
+            $stmt = $db -> prepare($sql);
+
+            $stmt -> bindValue(':user_id', $id, PDO::PARAM_INT);
+
+            $stmt -> execute();
+
+            $sql = 'INSERT INTO income_category (name, user_id) SELECT name, :user_id AS user_id FROM income_category_default';
+
+            $db = static::getDB();
+            $stmt = $db -> prepare($sql);
+
+            $stmt -> bindValue(':user_id', $id, PDO::PARAM_INT);
+
+            $stmt -> execute();
+
+            $sql = 'INSERT INTO payment (name, user_id) SELECT name, :user_id AS user_id FROM payment_default';
+
+            $db = static::getDB();
+            $stmt = $db -> prepare($sql);
+
+            $stmt -> bindValue(':user_id', $id, PDO::PARAM_INT);
+
             return $stmt -> execute();
         }
 
         return false;
-    }
-
-    protected function addUserTables(){
-        
     }
 
     public function validate(){
@@ -183,7 +219,7 @@ class User extends \Core\Model {
         $text = View::getTemplate('Password/reset_email.txt', ['url' => $url]);
         $html = View::getTemplate('Password/reset_email.html', ['url' => $url]);
 
-        Mail::send($this -> email, 'Zmiana has&lstrok;a', $text, $html);
+        Mail::send($this -> email, 'Zmiana hasła', $text, $html);
     }
 
     public static function findByPasswordReset($token){
