@@ -81,4 +81,68 @@ class Balance extends \Core\Model {
         
         return $stmt -> fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public static function getUserExpenses($date1, $date2){
+        $sql = 'SELECT * FROM expenses WHERE user_id = :user_id AND 
+            DATE(date) BETWEEN DATE(:date1) AND DATE(:date2) ORDER BY date DESC';
+        
+        $db = static::getDB();
+        $stmt = $db -> prepare($sql);
+
+        $stmt -> bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+        $stmt -> bindValue(':date1', $date1, PDO::PARAM_STR);
+        $stmt -> bindValue(':date2', $date2, PDO::PARAM_STR);
+
+        $stmt -> execute();
+        
+        return $stmt -> fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public static function getUserIncomes($date1, $date2){
+        $sql = 'SELECT * FROM incomes WHERE user_id = :user_id AND 
+            DATE(date) BETWEEN DATE(:date1) AND DATE(:date2) ORDER BY date DESC';
+        
+        $db = static::getDB();
+        $stmt = $db -> prepare($sql);
+
+        $stmt -> bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+        $stmt -> bindValue(':date1', $date1, PDO::PARAM_STR);
+        $stmt -> bindValue(':date2', $date2, PDO::PARAM_STR);
+
+        $stmt -> execute();
+        
+        return $stmt -> fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public static function getIncomeSums($date1, $date2){
+        $sql = 'SELECT DISTINCT category, SUM(amount) FROM incomes 
+            WHERE user_id = :user_id AND DATE(date) BETWEEN DATE(:date1) AND DATE(:date2) GROUP BY category ORDER BY SUM(amount) DESC';
+        
+        $db = static::getDB();
+        $stmt = $db -> prepare($sql);
+
+        $stmt -> bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+        $stmt -> bindValue(':date1', $date1, PDO::PARAM_STR);
+        $stmt -> bindValue(':date2', $date2, PDO::PARAM_STR);
+
+        $stmt -> execute();
+        
+        return $stmt -> fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public static function getExpenseSums($date1, $date2){
+        $sql = 'SELECT DISTINCT category, SUM(amount) FROM expenses 
+            WHERE user_id = :user_id AND DATE(date) BETWEEN DATE(:date1) AND DATE(:date2) GROUP BY category ORDER BY SUM(amount) DESC';
+        
+        $db = static::getDB();
+        $stmt = $db -> prepare($sql);
+
+        $stmt -> bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+        $stmt -> bindValue(':date1', $date1, PDO::PARAM_STR);
+        $stmt -> bindValue(':date2', $date2, PDO::PARAM_STR);
+
+        $stmt -> execute();
+        
+        return $stmt -> fetchAll(PDO::FETCH_ASSOC);
+    }
 }
