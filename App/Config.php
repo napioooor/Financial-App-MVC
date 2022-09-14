@@ -4,9 +4,9 @@ namespace App;
 class Config {
     const DB_HOST = 'budget.jan-napiorkowski.profesjonalnyprogramista.pl.mysql.dhosting.pl';
     const DB_NAME = 'aew9ah_budgetja';
-    const DB_USER = 'me7ati_budgetja';
-    const DB_PASSWORD = '***';
-    const SHOW_ERRORS = true;
+    const DB_USER = '***';
+    const DB_PASSWORD = 'Eiv4Ahngoa8A';
+    const SHOW_ERRORS = false;
     const SECRET_KEY = '***';
 
     //Email config

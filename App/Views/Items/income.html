@@ -8,11 +8,11 @@
         <table>
             <tr>
                 <td><label for="amount">Kwota:</label></td>
-                <td><input name="amount" type="number" id="amount" class="form-control m-1" required step="0.01"></td>
+                <td><input name="amount" type="number" id="amount" class="form-control m-1" required step="0.01" min="0.01"></td>
             </tr>
             <tr>
                 <td><label for="date">Data:</label></td>
-                <td><input name="date" type="date" id="date" class="form-control m-1" required value="{{ todays_date }}"></td>
+                <td><input name="date" type="date" id="date" class="form-control m-1" required value="{{ todays_date }}" min="{{ min_date }}" max="{{ max_date }}"></td>
             </tr>
             <tr>
                 <td><label for="category">Kategoria:</label></td>

@@ -17,7 +17,9 @@ class Items extends Authenticated {
     public function incomeAction(){
         View::renderTemplate('Items/income.html', [
             'todays_date' => Dates::getTodaysDate(), 
-            'user_incomes' => Balance::getUserIncomeCategories()
+            'user_incomes' => Balance::getUserIncomeCategories(),
+            'min_date' => Dates::getMinDate(), 
+            'max_date' => Dates::getMaxDate() 
         ]);
     }
 
@@ -39,7 +41,9 @@ class Items extends Authenticated {
         View::renderTemplate('Items/expense.html', [
             'todays_date' => Dates::getTodaysDate(), 
             'user_expenses' => Balance::getUserExpenseCategories(),
-            'payments' => Balance::getUserPaymentMethods()
+            'payments' => Balance::getUserPaymentMethods(),
+            'min_date' => Dates::getMinDate(), 
+            'max_date' => Dates::getMaxDate() 
         ]);
     }
 

@@ -8,7 +8,7 @@ use App\Config;
 
 class Mail {
     public static function send($to, $subject, $text, $html){
-        $mail = new PHPMailer(true);
+        $mail = new PHPMailer(false);
 
         try {
             //Server settings
