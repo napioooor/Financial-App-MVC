@@ -1,3 +1,5 @@
+//Password validator:
+
 $.validator.addMethod('validPassword',
     function(value, element, param){
         if(value != ''){
@@ -14,6 +16,8 @@ $.validator.addMethod('validPassword',
     'Has&lstrok;o musi zawiera&cacute; co najmniej jedn&aogon; liter&eogon; i jedn&aogon; cyfr&eogon;'
 );
 
+//Date selector modal:
+
 function onChangeFun() {
     selected_val = document.getElementById('period').value;
   
@@ -25,4 +29,3 @@ function onChangeFun() {
       });
     }
   };
-  

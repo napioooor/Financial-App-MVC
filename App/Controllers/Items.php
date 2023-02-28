@@ -65,10 +65,10 @@ class Items extends Authenticated {
         if(isset($_POST["period"])){
             if($_POST["period"] == 1){
                 $date1 = date("Y-m-01");
-                $date2 = date('Y-m-01', strtotime("+1 months", strtotime($date1)));
+                $date2 = date('Y-m-t', strtotime($date1));
             } else if($_POST["period"] == 2){
-                $date2 = date("Y-m-01");
-                $date1 = date('Y-m-01', strtotime("-1 months", strtotime($date2)));
+                $date1 = date('Y-m-01', strtotime("-1 months"));
+                $date2 = date("Y-m-t", strtotime($date1));
             } else if($_POST["period"] == 3){
                 $date1 = date("Y-01-01");
                 $date2 = date("Y-m-d");

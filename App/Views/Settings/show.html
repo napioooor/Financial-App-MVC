@@ -1,0 +1,304 @@
+{% extends "base.html" %}
+
+{% block title %}Ustawienia{% endblock %}
+
+{% block body %}
+    <h1>Ustawienia konta</h1>
+    <div class="accordion w-100" id="accordionExample">
+        <div class="card">
+          <div class="card-header" id="headingOne">
+            <h2 class="mb-0">
+              <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                Ustawienia kategorii wydatk&oacute;w
+              </button>
+            </h2>
+          </div>      
+          <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+            <div class="card-body">
+                <div class="container">
+                    {% for user_expense_category in user_expense_categories %}
+                        <div class="row mb-1 d-flex justify-content-between">
+                            <div>{{ user_expense_category.name }}</div><div>{% if user_expense_category.monthly_limit %}
+                              Limit: {{ user_expense_category.monthly_limit }}{% endif %}</div>
+                            <div>
+                              <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#editExpense_{{ user_expense_category.id }}">Edytuj</button> 
+                              <button class="btn btn-danger">Usu&nacute;</button>
+                            </div>
+                        </div>
+                    <div class="modal fade" id="editExpense_{{ user_expense_category.id }}" tabindex="-1" aria-labelledby="#editExpense_{{ user_expense_category.id }}" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="editExpenseLabel">Edytuj kategori&eogon; wydatku</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            <form action="/settings/{{ user_expense_category.id }}/editExpCat" method="post" id="formC{{ user_expense_category.id }}">
+                              <table>
+                                <tr>
+                                    <td><label for="name">Nazwa:</label></td>
+                                    <td><input name="name" id="name" class="form-control m-1" value="{{ user_expense_category.name }}" required></td>
+                                </tr>
+                                <tr>
+                                    <td><label for="monthly_limit">Limit miesi&eogon;czny:</label></td>
+                                    <td><input name="monthly_limit" type="number" id="monthly_limit" class="form-control m-1" step="0.01" min="0.01" 
+                                      {% if user_expense_category.monthly_limit %}value="{{ user_expense_category.monthly_limit }}"{% endif %}></td>
+                                </tr>
+                            </table>
+                            </form>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+                            <button type="submit" class="btn btn-primary" form="formC{{ user_expense_category.id }}">Zapisz</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    {% endfor %}
+                    <div scope="row">
+                      <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#addExpenseCategory">Dodaj now&aogon; kategori&eogon;</button>
+                      <div class="modal fade" id="addExpenseCategory" tabindex="-1" aria-labelledby="#addExpenseCategory" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="addExpenseCategoryLabel">Dodaj kategori&eogon; wydatku</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              <form action="/settings/addExpenseCategory" method="post" id="addExpenseCategoryForm">
+                                <table>
+                                  <tr>
+                                      <td><label for="name">Nazwa:</label></td>
+                                      <td><input name="name" id="name" class="form-control m-1" required></td>
+                                  </tr>
+                                  <tr>
+                                      <td><label for="monthly_limit">Limit miesi&eogon;czny:</label></td>
+                                      <td><input name="monthly_limit" type="number" id="monthly_limit" class="form-control m-1" step="0.01" min="0.01"></td>
+                                  </tr>
+                              </table>
+                              </form>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+                              <button type="submit" class="btn btn-primary" form="addExpenseCategoryForm">Zapisz</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header" id="headingTwo">
+            <h2 class="mb-0">
+              <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                Ustawienia kategorii przychod&oacute;w
+              </button>
+            </h2>
+          </div>
+          <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+            <div class="card-body">
+              <div class="container">
+                {% for user_income_category in user_income_categories %}
+                    <div class="row mb-1 d-flex justify-content-between">
+                        <div>{{ user_income_category.name }}</div>
+                        <div>{% if user_income_category.monthly_limit %}Limit: {{ user_income_category.monthly_limit }}{% endif %}</div>
+                        <div>
+                          <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#editIncome_{{ user_income_category.id }}">Edytuj</button>                           
+                          <button class="btn btn-danger">Usu&nacute;</button>
+                        </div>                          
+                    </div>
+                <div class="modal fade" id="editIncome_{{ user_income_category.id }}" tabindex="-1" aria-labelledby="#editIncome_{{ user_income_category.id }}" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="editIncomeLabel">Edytuj kategori&eogon; przychodu</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <form action="/settings/{{ user_income_category.id }}/editIncCat" method="post" id="formI{{ user_income_category.id }}">
+                          <table>
+                            <tr>
+                                <td><label for="name">Nazwa:</label></td>
+                                <td><input name="name" id="name" class="form-control m-1" value="{{ user_income_category.name }}" required></td>
+                            </tr>
+                            <tr>
+                                <td><label for="monthly_limit">Limit miesi&eogon;czny:</label></td>
+                                <td><input name="monthly_limit" type="number" id="monthly_limit" class="form-control m-1" step="0.01" min="0.01" 
+                                  {% if user_income_category.monthly_limit %}value="{{ user_income_category.monthly_limit }}"{% endif %}></td>
+                            </tr>
+                        </table>
+                        </form>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+                        <button type="submit" class="btn btn-primary" form="formI{{ user_income_category.id }}">Zapisz</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+                <div scope="row">
+                    <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#addIncomeCategory">Dodaj now&aogon; kategori&eogon;</button>
+                    <div class="modal fade" id="addIncomeCategory" tabindex="-1" aria-labelledby="#addIncomeCategory" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="addIncomeCategoryLabel">Dodaj kategori&eogon; przychodu</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            <form action="/settings/addIncomeCategory" method="post" id="addIncomeCategoryForm">
+                              <table>
+                                <tr>
+                                    <td><label for="name">Nazwa:</label></td>
+                                    <td><input name="name" id="name" class="form-control m-1" required></td>
+                                </tr>
+                                <tr>
+                                    <td><label for="monthly_limit">Limit miesi&eogon;czny:</label></td>
+                                    <td><input name="monthly_limit" type="number" id="monthly_limit" class="form-control m-1" step="0.01" min="0.01"></td>
+                                </tr>
+                            </table>
+                            </form>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+                            <button type="submit" class="btn btn-primary" form="addIncomeCategoryForm">Zapisz</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header" id="headingThree">
+            <h2 class="mb-0">
+              <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                Ustawienia sposob&oacute;w p&lstrok;atno&sacute;ci
+              </button>
+            </h2>
+          </div>
+          <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+            <div class="card-body">
+              <div class="container">
+                {% for payment in payments %}
+                    <div class="row mb-1 d-flex justify-content-between">
+                        <div>{{ payment.name }}</div><div>{{ payment.monthly_limit }}</div>
+                        <div>
+                          <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#editPayment_{{ payment.id }}">Edytuj</button>
+                          <button class="btn btn-danger">Usu&nacute;</button>
+                        </div>
+                    </div>
+                <div class="modal fade" id="editPayment_{{ payment.id }}" tabindex="-1" aria-labelledby="#editPayment_{{ payment.id }}" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="editPaymentLabel">Edytuj spos&oacute;b p&lstrok;atno&sacute;ci</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <form action="/settings/{{ payment.id }}/editPayMet" method="post" id="formP{{ payment.id }}">
+                          <table>
+                            <tr>
+                                <td><label for="name">Nazwa:</label></td>
+                                <td><input name="name" id="name" class="form-control m-1" value="{{ payment.name }}" required></td>
+                            </tr>
+                            <tr>
+                                <td><label for="monthly_limit">Limit miesi&eogon;czny:</label></td>
+                                <td><input name="monthly_limit" type="number" id="monthly_limit" class="form-control m-1" step="0.01" min="0.01" 
+                                  {% if payment.monthly_limit %}value="{{ payment.monthly_limit }}"{% endif %}></td>
+                            </tr>
+                        </table>
+                        </form>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+                        <button type="submit" class="btn btn-primary" form="formP{{ payment.id }}">Zapisz</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+                <div scope="row">
+                  <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#addPaymentMethod">Dodaj nowy spos&oacute;b p&lstrok;atno&sacute;ci</button>
+                  <div class="modal fade" id="addPaymentMethod" tabindex="-1" aria-labelledby="#addPaymentMethod" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="addPaymentMethodLabel">Dodaj nowy spos&oacute;b p&lstrok;atno&sacute;ci</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <form action="/settings/addPaymentMethod" method="post" id="addPayment">
+                            <table>
+                              <tr>
+                                  <td><label for="name">Nazwa:</label></td>
+                                  <td><input name="name" id="name" class="form-control m-1" required></td>
+                              </tr>
+                              <tr>
+                                  <td><label for="monthly_limit">Limit miesi&eogon;czny:</label></td>
+                                  <td><input name="monthly_limit" type="number" id="monthly_limit" class="form-control m-1" step="0.01" min="0.01"></td>
+                              </tr>
+                          </table>
+                          </form>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+                          <button type="submit" class="btn btn-primary" form="addPayment">Zapisz</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+            <div class="card-header" id="headingFour">
+              <h2 class="mb-0">
+                <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                  Ustawienia konta
+                </button>
+              </h2>
+            </div>
+            <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordionExample">
+              <div class="card-body">
+                <div class="container">
+                    <div class="row mb-1 d-flex justify-content-between">
+                        <div>Adres e-mail</div><div>{{ user.email }}</div>
+                        <div><button class="btn btn-dark">Zmie&nacute;</button></div>
+                    </div>
+                    <div class="row mb-1 d-flex justify-content-between">
+                        <div>Has&lstrok;o</div><div>********</div>
+                        <div><button class="btn btn-dark">Zmie&nacute;</button></div>
+                    </div>
+                    <div class="row mb-1">
+                        <button class="btn btn-danger">Usu&nacute; konto</button>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
+{% endblock %}
+{% block footer %}
+    <script src="/js/app.js"></script>
+{% endblock %}

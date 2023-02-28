@@ -55,7 +55,7 @@
         <section class="container bg-light text-dark d-flex flex-column align-items-center">        
             <h2>Okres: {{ date1 }} do {{ date2 }}</h2>
             
-            {% if user_expenses and user_incomes %}
+            {% if user_expenses or user_incomes %}
                 <table class="table table-striped table-bordered table-hover table-responsive-lg">
                     <thead class="bg-dark text-light">
                         <tr>

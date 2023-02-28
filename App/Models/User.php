@@ -333,4 +333,103 @@ class User extends \Core\Model {
 
         return false;
     }
+
+    public function saveIncomeCategory($id){
+        $sql = 'UPDATE income_category SET name = :name, monthly_limit = :monthly_limit WHERE id = :id AND user_id = :user_id';
+
+        $db = static::getDB();
+        $stmt = $db -> prepare($sql);
+
+        $stmt -> bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+        if($this -> monthly_limit)
+            $stmt -> bindValue(':monthly_limit', $this -> monthly_limit, PDO::PARAM_STR);
+        else 
+            $stmt -> bindValue(':monthly_limit', NULL, PDO::PARAM_STR);
+        $stmt -> bindValue(':name', $this -> name, PDO::PARAM_STR);
+        $stmt -> bindValue(':id', $id, PDO::PARAM_INT);
+
+        return $stmt -> execute();
+    }
+
+    public function saveExpenseCategory($id){
+        $sql = 'UPDATE expense_category SET name = :name, monthly_limit = :monthly_limit WHERE id = :id AND user_id = :user_id';
+
+        $db = static::getDB();
+        $stmt = $db -> prepare($sql);
+
+        $stmt -> bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+        if($this -> monthly_limit)
+            $stmt -> bindValue(':monthly_limit', $this -> monthly_limit, PDO::PARAM_STR);
+        else 
+            $stmt -> bindValue(':monthly_limit', NULL, PDO::PARAM_STR);
+        $stmt -> bindValue(':name', $this -> name, PDO::PARAM_STR);
+        $stmt -> bindValue(':id', $id, PDO::PARAM_INT);
+
+        return $stmt -> execute();
+    }
+
+    public function savePaymentMethod($id){
+        $sql = 'UPDATE payment SET name = :name, monthly_limit = :monthly_limit WHERE id = :id AND user_id = :user_id';
+
+        $db = static::getDB();
+        $stmt = $db -> prepare($sql);
+
+        $stmt -> bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+        if($this -> monthly_limit)
+            $stmt -> bindValue(':monthly_limit', $this -> monthly_limit, PDO::PARAM_STR);
+        else 
+            $stmt -> bindValue(':monthly_limit', NULL, PDO::PARAM_STR);
+        $stmt -> bindValue(':name', $this -> name, PDO::PARAM_STR);
+        $stmt -> bindValue(':id', $id, PDO::PARAM_INT);
+
+        return $stmt -> execute();
+    }
+
+    public function addExpenseCategory(){
+        $sql = 'INSERT INTO expense_category (name, user_id, monthly_limit) VALUES (:name, :user_id, :monthly_limit)';
+
+        $db = static::getDB();
+        $stmt = $db -> prepare($sql);
+
+        $stmt -> bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+        if($this -> monthly_limit)
+            $stmt -> bindValue(':monthly_limit', $this -> monthly_limit, PDO::PARAM_STR);
+        else 
+            $stmt -> bindValue(':monthly_limit', NULL, PDO::PARAM_STR);
+        $stmt -> bindValue(':name', $this -> name, PDO::PARAM_STR);
+
+        return $stmt -> execute();
+    }
+
+    public function addIncomeCategory(){
+        $sql = 'INSERT INTO income_category (name, user_id, monthly_limit) VALUES (:name, :user_id, :monthly_limit)';
+
+        $db = static::getDB();
+        $stmt = $db -> prepare($sql);
+
+        $stmt -> bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+        if($this -> monthly_limit)
+            $stmt -> bindValue(':monthly_limit', $this -> monthly_limit, PDO::PARAM_STR);
+        else 
+            $stmt -> bindValue(':monthly_limit', NULL, PDO::PARAM_STR);
+        $stmt -> bindValue(':name', $this -> name, PDO::PARAM_STR);
+
+        return $stmt -> execute();
+    }
+
+    public function addPaymentMethod(){
+        $sql = 'INSERT INTO payment (name, user_id, monthly_limit) VALUES (:name, :user_id, :monthly_limit)';
+
+        $db = static::getDB();
+        $stmt = $db -> prepare($sql);
+
+        $stmt -> bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+        if($this -> monthly_limit)
+            $stmt -> bindValue(':monthly_limit', $this -> monthly_limit, PDO::PARAM_STR);
+        else 
+            $stmt -> bindValue(':monthly_limit', NULL, PDO::PARAM_STR);
+        $stmt -> bindValue(':name', $this -> name, PDO::PARAM_STR);
+
+        return $stmt -> execute();
+    }
 }
