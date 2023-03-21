@@ -124,4 +124,74 @@ class Settings extends Authenticated {
             $this -> redirect('/settings/show');
         }
     }
+
+    public function deleteExpenseCatAction(){
+        $category = new User($_POST);
+
+        if($category -> deleteExpenseCategory($this -> route_params['id'])){
+            Flash::addMessage('Kategoria wydatku usunięta pomyślnie!');
+
+            $this -> redirect('/settings/show');
+        } else {
+            Flash::addMessage('Coś poszło nie tak!', Flash::WARNING);
+
+            $this -> redirect('/settings/show');
+        }
+    }
+
+    public function deleteIncomeCatAction(){
+        $category = new User($_POST);
+
+        if($category -> deleteIncomeCategory($this -> route_params['id'])){
+            Flash::addMessage('Kategoria przychodu usunięta pomyślnie!');
+
+            $this -> redirect('/settings/show');
+        } else {
+            Flash::addMessage('Coś poszło nie tak!', Flash::WARNING);
+
+            $this -> redirect('/settings/show');
+        }
+    }
+
+    public function deletePaymentMetAction(){
+        $method = new User($_POST);
+
+        if($method -> deletePaymentMethod($this -> route_params['id'])){
+            Flash::addMessage('Metoda płatności usunięta pomyślnie!');
+
+            $this -> redirect('/settings/show');
+        } else {
+            Flash::addMessage('Coś poszło nie tak!', Flash::WARNING);
+
+            $this -> redirect('/settings/show');
+        }
+    }
+
+    public function deleteBalanceAction(){
+        $method = new User($_POST);
+
+        if($method -> deleteBalance()){
+            Flash::addMessage('Wydatki i przychody zostały usunięte pomyślnie!');
+
+            $this -> redirect('/settings/show');
+        } else {
+            Flash::addMessage('Coś poszło nie tak!', Flash::WARNING);
+
+            $this -> redirect('/settings/show');
+        }
+    }
+
+    public function deleteAccountAction(){
+        $method = new User($_POST);
+
+        if($method -> deleteAccount()){
+            Flash::addMessage('Konto zostało usunięte pomyślnie.');
+
+            $this -> redirect('/');
+        } else {
+            Flash::addMessage('Coś poszło nie tak!', Flash::WARNING);
+
+            $this -> redirect('/settings/show');
+        }
+    }
 }

@@ -22,7 +22,7 @@
                               Limit: {{ user_expense_category.monthly_limit }}{% endif %}</div>
                             <div>
                               <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#editExpense_{{ user_expense_category.id }}">Edytuj</button> 
-                              <button class="btn btn-danger">Usu&nacute;</button>
+                              <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteExpense_{{ user_expense_category.id }}">Usu&nacute;</button>
                             </div>
                         </div>
                     <div class="modal fade" id="editExpense_{{ user_expense_category.id }}" tabindex="-1" aria-labelledby="#editExpense_{{ user_expense_category.id }}" aria-hidden="true">
@@ -52,6 +52,25 @@
                           <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
                             <button type="submit" class="btn btn-primary" form="formC{{ user_expense_category.id }}">Zapisz</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="modal fade" id="deleteExpense_{{ user_expense_category.id }}" tabindex="-1" aria-labelledby="#deleteExpense_{{ user_expense_category.id }}" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="deleteExpenseLabel">Usu&sacute; kategori&eogon; wydatku</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            <span>Czy na pewno chcesz usun&aogon;&cacute; kategori&eogon; {{ user_expense_category.name }}?</span>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+                            <a href="/settings/{{ user_expense_category.id }}/deleteExpenseCat" class="btn btn-danger">Tak</a>
                           </div>
                         </div>
                       </div>
@@ -111,7 +130,7 @@
                         <div>{% if user_income_category.monthly_limit %}Limit: {{ user_income_category.monthly_limit }}{% endif %}</div>
                         <div>
                           <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#editIncome_{{ user_income_category.id }}">Edytuj</button>                           
-                          <button class="btn btn-danger">Usu&nacute;</button>
+                          <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteIncome_{{ user_income_category.id }}">Usu&nacute;</button>
                         </div>                          
                     </div>
                 <div class="modal fade" id="editIncome_{{ user_income_category.id }}" tabindex="-1" aria-labelledby="#editIncome_{{ user_income_category.id }}" aria-hidden="true">
@@ -141,6 +160,25 @@
                       <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
                         <button type="submit" class="btn btn-primary" form="formI{{ user_income_category.id }}">Zapisz</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal fade" id="deleteIncome_{{ user_income_category.id }}" tabindex="-1" aria-labelledby="#deleteIncome_{{ user_income_category.id }}" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="deleteIncomeLabel">Usu&sacute; kategori&eogon; wydatku</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <span>Czy na pewno chcesz usun&aogon;&cacute; kategori&eogon; {{ user_income_category.name }}?</span>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+                        <a href="/settings/{{ user_income_category.id }}/deleteIncomeCat" class="btn btn-danger">Tak</a>
                       </div>
                     </div>
                   </div>
@@ -199,7 +237,7 @@
                         <div>{{ payment.name }}</div><div>{{ payment.monthly_limit }}</div>
                         <div>
                           <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#editPayment_{{ payment.id }}">Edytuj</button>
-                          <button class="btn btn-danger">Usu&nacute;</button>
+                          <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deletePayment_{{ payment.id }}">Usu&nacute;</button>
                         </div>
                     </div>
                 <div class="modal fade" id="editPayment_{{ payment.id }}" tabindex="-1" aria-labelledby="#editPayment_{{ payment.id }}" aria-hidden="true">
@@ -229,6 +267,25 @@
                       <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
                         <button type="submit" class="btn btn-primary" form="formP{{ payment.id }}">Zapisz</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal fade" id="deletePayment_{{ payment.id }}" tabindex="-1" aria-labelledby="#deletePayment_{{ payment.id }}" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="deletePaymentLabel">Usu&sacute; metod&eogon; p&lstrok;atno&sacute;ci</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <span>Czy na pewno chcesz usun&aogon;&cacute; metod&eogon; p&lstrok;atno&sacute;ci {{ payment.name }}?</span>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+                        <a href="/settings/{{ payment.id }}/deletePaymentMet" class="btn btn-danger">Tak</a>
                       </div>
                     </div>
                   </div>
@@ -291,7 +348,106 @@
                         <div><button class="btn btn-dark">Zmie&nacute;</button></div>
                     </div>
                     <div class="row mb-1">
-                        <button class="btn btn-danger">Usu&nacute; konto</button>
+                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteBalance">Usu&nacute; wszystkie wydatki i przychody</button><span> </span>
+                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteAccount">Usu&nacute; konto</button>
+                        <div class="modal fade" id="deleteBalance" tabindex="-1" aria-labelledby="#deleteBalance" aria-hidden="true">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="deleteBalanceLabel">Usu&nacute; wszystkie wydatki i przychody</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                <span>Czy na pewno chcesz usun&aogon;&cacute; WSZYSTKIE wydatki i przychody?</span>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+                                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteBalanceConfirm">Tak</button>
+                                <div class="modal fade" id="deleteBalanceConfirm" tabindex="-1" aria-labelledby="#deleteBalanceConfirm" aria-hidden="true">
+                                  <div class="modal-dialog">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <h5 class="modal-title" id="deleteBalanceConfirmLabel">Aby kontynuowa&cacute; podaj dane logowania:</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                          <span aria-hidden="true">&times;</span>
+                                        </button>
+                                      </div>
+                                      <div class="modal-body">
+                                        <form action="/settings/deleteBalance" method="post" id="formDeleteBalance">
+                                          <table>
+                                            <tr>
+                                              <td><label for="email">Adres email:</label></td>
+                                              <td><input name="email" type="email" id="email" class="form-control m-1" required></td>
+                                            </tr>
+                                            <tr>
+                                                <td><label for="password">Has&lstrok;o:</label></td>
+                                                <td><input name="password" type="password" id="password" class="form-control m-1" required></td>
+                                            </tr>
+                                        </table>
+                                        </form>
+                                      </div>
+                                      <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+                                        <button type="submit" class="btn btn-primary" form="formDeleteBalance">Potwierd&zacute;</button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="modal fade" id="deleteAccount" tabindex="-1" aria-labelledby="#deleteAccount" aria-hidden="true">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="deleteAccountLabel">Usu&nacute; konto</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                <span>Czy na pewno chcesz usun&aogon;&cacute; swoje konto?</span>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+                                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteAccountConfirm">Tak</button>
+                                <div class="modal fade" id="deleteAccountConfirm" tabindex="-1" aria-labelledby="#deleteAccountConfirm" aria-hidden="true">
+                                  <div class="modal-dialog">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <h5 class="modal-title" id="deleteAccountConfirmLabel">Aby kontynuowa&cacute; podaj dane logowania:</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                          <span aria-hidden="true">&times;</span>
+                                        </button>
+                                      </div>
+                                      <div class="modal-body">
+                                        <form action="/settings/deleteAccount" method="post" id="formdeleteAccount">
+                                          <table>
+                                            <tr>
+                                              <td><label for="email">Adres email:</label></td>
+                                              <td><input name="email" type="email" id="email" class="form-control m-1" required></td>
+                                            </tr>
+                                            <tr>
+                                                <td><label for="password">Has&lstrok;o:</label></td>
+                                                <td><input name="password" type="password" id="password" class="form-control m-1" required></td>
+                                            </tr>
+                                        </table>
+                                        </form>
+                                      </div>
+                                      <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+                                        <button type="submit" class="btn btn-primary" form="formdeleteAccount">Potwierd&zacute;</button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                     </div>
                 </div>
               </div>

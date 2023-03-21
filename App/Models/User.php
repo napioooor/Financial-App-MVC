@@ -432,4 +432,117 @@ class User extends \Core\Model {
 
         return $stmt -> execute();
     }
+
+    public function deleteIncomeCategory($id){
+        $sql = 'DELETE FROM income_category WHERE id = :id AND user_id = :user_id';
+
+        $db = static::getDB();
+        $stmt = $db -> prepare($sql);
+
+        $stmt -> bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+        $stmt -> bindValue(':id', $id, PDO::PARAM_INT);
+
+        return $stmt -> execute();
+    }
+
+    public function deleteExpenseCategory($id){
+        $sql = 'DELETE FROM expense_category WHERE id = :id AND user_id = :user_id';
+
+        $db = static::getDB();
+        $stmt = $db -> prepare($sql);
+
+        $stmt -> bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+        $stmt -> bindValue(':id', $id, PDO::PARAM_INT);
+
+        return $stmt -> execute();
+    }
+
+    public function deletePaymentMethod($id){
+        $sql = 'DELETE FROM payment WHERE id = :id AND user_id = :user_id';
+
+        $db = static::getDB();
+        $stmt = $db -> prepare($sql);
+
+        $stmt -> bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);        
+        $stmt -> bindValue(':id', $id, PDO::PARAM_INT);
+
+        return $stmt -> execute();
+    }
+
+    public function deleteBalance(){
+        if(($this -> authenticate($this -> email, $this -> password)) -> id == $_SESSION['user_id']){
+            if($this -> deleteExpenses() && $this -> deleteIncomes())
+                return true;
+        } else return false;
+    }
+
+    protected function deleteExpenses(){
+        $sql = 'DELETE FROM expenses WHERE user_id = :user_id';
+
+        $db = static::getDB();
+        $stmt = $db -> prepare($sql);
+
+        $stmt -> bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+
+        return $stmt -> execute();
+    }
+
+    protected function deleteIncomes(){
+        $sql = 'DELETE FROM incomes WHERE user_id = :user_id';
+
+        $db = static::getDB();
+        $stmt = $db -> prepare($sql);
+
+        $stmt -> bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+
+        return $stmt -> execute();
+    }
+
+    public function deleteAccount(){
+        if(($this -> authenticate($this -> email, $this -> password)) -> id == $_SESSION['user_id']){
+            if($this -> deleteExpenses() && $this -> deleteIncomes() && $this -> deleteAllIncomeCategories() && $this -> deleteAllExpenseCategories() 
+            && $this -> deleteAllPaymentMethods())
+                $sql = 'DELETE FROM users WHERE id = :user_id';
+
+                $db = static::getDB();
+                $stmt = $db -> prepare($sql);
+        
+                $stmt -> bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+        
+                return $stmt -> execute();
+        } else return false;
+    }
+
+    protected function deleteAllIncomeCategories(){
+        $sql = 'DELETE FROM income_category WHERE user_id = :user_id';
+
+        $db = static::getDB();
+        $stmt = $db -> prepare($sql);
+
+        $stmt -> bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+
+        return $stmt -> execute();
+    }
+
+    protected function deleteAllExpenseCategories(){
+        $sql = 'DELETE FROM expense_category WHERE user_id = :user_id';
+
+        $db = static::getDB();
+        $stmt = $db -> prepare($sql);
+
+        $stmt -> bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+
+        return $stmt -> execute();
+    }
+
+    protected function deleteAllPaymentMethods(){
+        $sql = 'DELETE FROM payment WHERE user_id = :user_id';
+
+        $db = static::getDB();
+        $stmt = $db -> prepare($sql);
+
+        $stmt -> bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+
+        return $stmt -> execute();
+    }
 }
