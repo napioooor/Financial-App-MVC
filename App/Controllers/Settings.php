@@ -23,12 +23,6 @@ class Settings extends Authenticated {
         ]);
     }
 /*
-    public function editAction(){
-        View::renderTemplate('Settings/edit.html', [
-            'user' => $this -> user
-        ]);
-    }
-
     public function updateAction(){
         if($this -> user -> updateProfile($_POST)){
             Flash::addMessage('Zapisano zmiany');
@@ -168,9 +162,9 @@ class Settings extends Authenticated {
     }
 
     public function deleteBalanceAction(){
-        $method = new User($_POST);
+        $user = new User($_POST);
 
-        if($method -> deleteBalance()){
+        if($user -> deleteBalance()){
             Flash::addMessage('Wydatki i przychody zostały usunięte pomyślnie!');
 
             $this -> redirect('/settings/show');
@@ -182,12 +176,42 @@ class Settings extends Authenticated {
     }
 
     public function deleteAccountAction(){
-        $method = new User($_POST);
+        $user = new User($_POST);
 
-        if($method -> deleteAccount()){
+        if($user -> deleteAccount()){
             Flash::addMessage('Konto zostało usunięte pomyślnie.');
 
             $this -> redirect('/');
+        } else {
+            Flash::addMessage('Coś poszło nie tak!', Flash::WARNING);
+
+            $this -> redirect('/settings/show');
+        }
+    }
+
+    public function changeEmailAction(){
+        $user = new User($_POST);
+
+        if($user -> changeEmail()){
+            $user -> sendActivationEmail();
+
+            Flash::addMessage('Adres email został zmieniony pomyślnie. Na nowy adres email został wysłany link aktywacyjny.');
+
+            $this -> redirect('/settings/show');
+        } else {
+            Flash::addMessage('Coś poszło nie tak!', Flash::WARNING);
+
+            $this -> redirect('/settings/show');
+        }
+    }
+
+    public function changePasswordAction(){
+        $user = new User($_POST);
+
+        if($user -> changePassword()){
+            Flash::addMessage('Hasło zostało zmienione pomyślnie.');
+
+            $this -> redirect('/settings/show');
         } else {
             Flash::addMessage('Coś poszło nie tak!', Flash::WARNING);
 

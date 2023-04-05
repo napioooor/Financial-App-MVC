@@ -341,11 +341,73 @@
                 <div class="container">
                     <div class="row mb-1 d-flex justify-content-between">
                         <div>Adres e-mail</div><div>{{ user.email }}</div>
-                        <div><button class="btn btn-dark">Zmie&nacute;</button></div>
+                        <div><button type="button" class="btn btn-dark" data-toggle="modal" data-target="#changeEmail">Zmie&nacute;</button></div>
+                        <div class="modal fade" id="changeEmail" tabindex="-1" aria-labelledby="#changeEmail" aria-hidden="true">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="changeEmailLabel">Zmie&nacute; adres email</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                <h3>Aby zmieni&cacute; adres email podaj has&lstrok;o:</h3>
+                                <form action="/settings/changeEmail" method="post" id="formChangeEmail">
+                                  <table>
+                                    <tr>
+                                        <td><label for="password">Has&lstrok;o:</label></td>
+                                        <td><input name="password" type="password" id="password" class="form-control m-1" required></td>
+                                    </tr>
+                                    <tr>
+                                      <td><label for="email">Nowy adres email:</label></td>
+                                      <td><input name="email" type="email" id="email" class="form-control m-1" required></td>
+                                    </tr>
+                                </table>
+                                </form>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+                                <button type="submit" class="btn btn-primary" form="formChangeEmail">Potwierd&zacute;</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                     </div>
                     <div class="row mb-1 d-flex justify-content-between">
                         <div>Has&lstrok;o</div><div>********</div>
-                        <div><button class="btn btn-dark">Zmie&nacute;</button></div>
+                        <div><button type="button" class="btn btn-dark" data-toggle="modal" data-target="#changePassword">Zmie&nacute;</button></div>
+                        <div class="modal fade" id="changePassword" tabindex="-1" aria-labelledby="#changePassword" aria-hidden="true">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="changePasswordLabel">Zmie&nacute; adres email</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                <h3>Aby zmieni&cacute; has&lstrok;o podaj stare has&lstrok;o:</h3>
+                                <form action="/settings/changePassword" method="post" id="formChangePassword">
+                                  <table>
+                                    <tr>
+                                        <td><label for="oldPassword">Stare has&lstrok;o:</label></td>
+                                        <td><input name="oldPassword" type="password" id="oldPassword" class="form-control m-1" required></td>
+                                    </tr>
+                                    <tr>
+                                      <td><label for="password">Nowe has&lstrok;o:</label></td>
+                                      <td><input name="password" type="password" id="password" class="form-control m-1" required></td>
+                                    </tr>
+                                </table>
+                                </form>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+                                <button type="submit" class="btn btn-primary" form="formChangePassword">Potwierd&zacute;</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                     </div>
                     <div class="row mb-1">
                         <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteBalance">Usu&nacute; wszystkie wydatki i przychody</button><span> </span>
@@ -457,4 +519,46 @@
 {% endblock %}
 {% block footer %}
     <script src="/js/app.js"></script>
+    <script>
+      $(document).ready(function(){
+         $('#formChangeEmail').validate({
+            rules: {
+               email: {
+                  required: true,
+                  email: true,
+                  remote: '/account/validate-email'
+               }
+            },
+            messages: {
+               email: {
+                  required: 'Podaj adres email',
+                  email: 'Nieprawid&lstrok;owy adres email',
+                  remote: 'Adres email w u&zdot;yciu'
+               }
+            }
+         });
+
+         $('#formChangePassword').validate({
+          rules: {
+               password: {
+                  required: true,
+                  minlength: 6,
+                  validPassword: true
+               }
+            },
+            messages: {
+               password: {
+                  required: 'Podaj has&lstrok;o',
+                  minlength: 'Has&lstrok;o musi si&eogon; sk&lstrok;ada&cacute; z conajmniej 6 znak&oacute;w',
+                  validPassword: 'Has&lstrok;o musi zawiera&cacute; co najmniej jedn&aogon; liter&eogon; i jedn&aogon; cyfr&eogon;'
+               }
+            }
+         });
+
+         $('#inputPassword').hideShowPassword({
+            show: false,
+            innerToggle: 'focus'
+         });
+      });
+   </script>
 {% endblock %}

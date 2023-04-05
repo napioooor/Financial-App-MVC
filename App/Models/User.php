@@ -43,7 +43,7 @@ class User extends \Core\Model {
             $sql = 'SELECT id FROM users ORDER BY ID DESC LIMIT 1';
             $stmt = $db -> prepare($sql);
 
-            $stmt->setFetchMode(PDO::FETCH_NUM);
+            $stmt -> setFetchMode(PDO::FETCH_NUM);
 
             $stmt -> execute();
 
@@ -94,7 +94,11 @@ class User extends \Core\Model {
         if(static::emailExists($this -> email, $this -> id ?? null)){
             $this -> errors[] = 'Adres email w u&zdot;yciu';
         }
+        
+        $this -> validatePassword();
+    }
 
+    public function validatePassword(){
         if(isset($this -> password)){
             if(strlen($this -> password) < 6){
                 $this -> errors[] = 'Has&lstrok;o musi si&eogon; sk&lstrok;ada&cacute; z conajmniej 6 znak&oacute;w';
@@ -107,7 +111,7 @@ class User extends \Core\Model {
             if(preg_match('/.*\d+.*/i', $this -> password) == 0){
                 $this -> errors[] = 'Has&lstrok;o musi zawiera&cacute; co najmniej jedn&aogon; cyfr&eogon;';
             }
-        } 
+        }
     }
 
     public static function emailExists($email, $ignore_id = null){
@@ -246,10 +250,10 @@ class User extends \Core\Model {
         }
     }
 
-    public function resetPassword($password){
+    public function resetPassword($password, $id){
         $this -> password = $password;
 
-        $this -> validate();
+        $this -> validatePassword();
 
         if(empty($this -> errors)){
             $password_hash = password_hash($this -> password, PASSWORD_DEFAULT);
@@ -263,7 +267,7 @@ class User extends \Core\Model {
             $db = static::getDB();
             $stmt = $db -> prepare($sql);
 
-            $stmt -> bindValue(':id', $this -> id, PDO::PARAM_INT);
+            $stmt -> bindValue(':id', $id, PDO::PARAM_INT);
             $stmt -> bindValue(':password_hash', $password_hash, PDO::PARAM_STR);
 
             return $stmt -> execute();
@@ -296,42 +300,6 @@ class User extends \Core\Model {
         $stmt -> bindValue(':hashed_token', $hashed_token, PDO::PARAM_STR);
 
         $stmt -> execute();
-    }
-
-    public function updateProfile($data){
-        $this -> name = $data['name'];
-        $this -> email = $data['email'];
-        if($data['password'] != ''){
-            $this -> password = $data['password'];
-        }
-
-        $this -> validate();
-
-        if(empty($this -> errors)){
-            $sql = 'UPDATE users 
-                    SET name = :name,
-                        email = :email';
-            if(isset($this -> password)){
-                $sql .= ',password_hash = :password_hash';
-            }
-            $sql .= ' WHERE id = :id';
-            
-            $db = static::getDB();
-            $stmt = $db -> prepare($sql);
-
-            $stmt -> bindValue(':name', $this -> name, PDO::PARAM_STR);
-            $stmt -> bindValue(':email', $this -> email, PDO::PARAM_STR);
-            $stmt -> bindValue(':id', $this -> id, PDO::PARAM_INT);
-
-            if(isset($this -> password)){
-                $password_hash = password_hash($this -> password, PASSWORD_DEFAULT);
-                $stmt -> bindValue(':password_hash', $password_hash, PDO::PARAM_STR);
-            }
-
-            return $stmt -> execute();
-        }
-
-        return false;
     }
 
     public function saveIncomeCategory($id){
@@ -544,5 +512,38 @@ class User extends \Core\Model {
         $stmt -> bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
 
         return $stmt -> execute();
+    }
+
+    public function changeEmail(){
+        $user = $this -> findByID($_SESSION['user_id']);
+
+        if(password_verify($this -> password, $user -> password_hash)){
+            if(!$this -> emailExists($this -> email)){
+                $token = new Token();
+                $hashed_token = $token -> getHash();
+                $this -> activation_token = $token -> getValue();
+                
+                $sql = 'UPDATE users SET email = :email, activation_hash = :activation_hash WHERE id = :id';
+                
+                $db = static::getDB();
+                $stmt = $db -> prepare($sql);
+                
+                $stmt -> bindValue(':email', $this -> email, PDO::PARAM_STR);
+                $stmt -> bindValue(':id', $_SESSION['user_id'], PDO::PARAM_INT);
+                $stmt -> bindValue(':activation_hash', $hashed_token, PDO::PARAM_STR);
+
+                return $stmt -> execute();
+            }
+        }
+    }
+
+    public function changePassword(){
+        $user = $this -> findByID($_SESSION['user_id']);
+
+        if(static::authenticate($user -> email, $this -> oldPassword)){
+            $this -> resetPassword($this -> password, $user -> id);
+
+            return true;
+        } else return false;
     }
 }
