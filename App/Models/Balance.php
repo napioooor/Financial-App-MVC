@@ -26,19 +26,6 @@ class Balance extends \Core\Model {
         return $stmt -> execute();
     }
 
-    public static function getUserIncomeCategories(){
-        $sql = 'SELECT * FROM income_category WHERE user_id = :user_id';
-        
-        $db = static::getDB();
-        $stmt = $db -> prepare($sql);
-
-        $stmt -> bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
-
-        $stmt -> execute();
-        
-        return $stmt -> fetchAll(PDO::FETCH_ASSOC);
-    }
-
     public function saveExpense(){
         $sql = 'INSERT INTO expenses (user_id, amount, category, date, payment, comment) 
         VALUES (:user_id, :amount, :category, :date, :payment, :comment)';
@@ -54,32 +41,6 @@ class Balance extends \Core\Model {
         $stmt -> bindValue(':comment', $this -> comment, PDO::PARAM_STR);
 
         return $stmt -> execute();
-    }
-
-    public static function getUserExpenseCategories(){
-        $sql = 'SELECT * FROM expense_category WHERE user_id = :user_id';
-        
-        $db = static::getDB();
-        $stmt = $db -> prepare($sql);
-
-        $stmt -> bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
-
-        $stmt -> execute();
-        
-        return $stmt -> fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    public static function getUserPaymentMethods(){
-        $sql = 'SELECT * FROM payment WHERE user_id = :user_id';
-        
-        $db = static::getDB();
-        $stmt = $db -> prepare($sql);
-
-        $stmt -> bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
-
-        $stmt -> execute();
-        
-        return $stmt -> fetchAll(PDO::FETCH_ASSOC);
     }
 
     public static function getUserExpenses($date1, $date2){

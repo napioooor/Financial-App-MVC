@@ -303,16 +303,12 @@ class User extends \Core\Model {
     }
 
     public function saveIncomeCategory($id){
-        $sql = 'UPDATE income_category SET name = :name, monthly_limit = :monthly_limit WHERE id = :id AND user_id = :user_id';
+        $sql = 'UPDATE income_category SET name = :name WHERE id = :id AND user_id = :user_id';
 
         $db = static::getDB();
         $stmt = $db -> prepare($sql);
 
-        $stmt -> bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
-        if($this -> monthly_limit)
-            $stmt -> bindValue(':monthly_limit', $this -> monthly_limit, PDO::PARAM_STR);
-        else 
-            $stmt -> bindValue(':monthly_limit', NULL, PDO::PARAM_STR);
+        $stmt -> bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);        
         $stmt -> bindValue(':name', $this -> name, PDO::PARAM_STR);
         $stmt -> bindValue(':id', $id, PDO::PARAM_INT);
 
@@ -370,16 +366,12 @@ class User extends \Core\Model {
     }
 
     public function addIncomeCategory(){
-        $sql = 'INSERT INTO income_category (name, user_id, monthly_limit) VALUES (:name, :user_id, :monthly_limit)';
+        $sql = 'INSERT INTO income_category (name, user_id) VALUES (:name, :user_id)';
 
         $db = static::getDB();
         $stmt = $db -> prepare($sql);
 
-        $stmt -> bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
-        if($this -> monthly_limit)
-            $stmt -> bindValue(':monthly_limit', $this -> monthly_limit, PDO::PARAM_STR);
-        else 
-            $stmt -> bindValue(':monthly_limit', NULL, PDO::PARAM_STR);
+        $stmt -> bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);        
         $stmt -> bindValue(':name', $this -> name, PDO::PARAM_STR);
 
         return $stmt -> execute();
@@ -545,5 +537,68 @@ class User extends \Core\Model {
 
             return true;
         } else return false;
+    }
+
+    public function getExpenseLimits(){
+        $sql = 'SELECT name, monthly_limit FROM expense_category WHERE user_id = :user_id';
+
+        $db = static::getDB();
+        $stmt = $db -> prepare($sql);
+        $stmt -> bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+
+        $stmt -> execute();
+
+        return $stmt -> fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getPaymentLimits(){
+        $sql = 'SELECT name, monthly_limit FROM payment WHERE user_id = :user_id';
+
+        $db = static::getDB();
+        $stmt = $db -> prepare($sql);
+        $stmt -> bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+
+        $stmt -> execute();
+
+        return $stmt -> fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public static function getUserExpenseCategories(){
+        $sql = 'SELECT * FROM expense_category WHERE user_id = :user_id';
+        
+        $db = static::getDB();
+        $stmt = $db -> prepare($sql);
+
+        $stmt -> bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+
+        $stmt -> execute();
+        
+        return $stmt -> fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public static function getUserIncomeCategories(){
+        $sql = 'SELECT * FROM income_category WHERE user_id = :user_id';
+        
+        $db = static::getDB();
+        $stmt = $db -> prepare($sql);
+
+        $stmt -> bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+
+        $stmt -> execute();
+        
+        return $stmt -> fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public static function getUserPaymentMethods(){
+        $sql = 'SELECT * FROM payment WHERE user_id = :user_id';
+        
+        $db = static::getDB();
+        $stmt = $db -> prepare($sql);
+
+        $stmt -> bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+
+        $stmt -> execute();
+        
+        return $stmt -> fetchAll(PDO::FETCH_ASSOC);
     }
 }

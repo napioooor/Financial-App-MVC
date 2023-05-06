@@ -4,6 +4,7 @@ namespace App\Controllers;
 use \Core\View;
 use \App\Dates;
 use \App\Models\Balance;
+use \App\Models\User;
 use \App\Flash;
 use \App\Auth;
 
@@ -17,7 +18,7 @@ class Items extends Authenticated {
     public function incomeAction(){
         View::renderTemplate('Items/income.html', [
             'todays_date' => Dates::getTodaysDate(), 
-            'user_incomes' => Balance::getUserIncomeCategories(),
+            'user_incomes' => User::getUserIncomeCategories(),
             'min_date' => Dates::getMinDate(), 
             'max_date' => Dates::getMaxDate() 
         ]);
@@ -40,8 +41,8 @@ class Items extends Authenticated {
     public function expenseAction(){
         View::renderTemplate('Items/expense.html', [
             'todays_date' => Dates::getTodaysDate(), 
-            'user_expenses' => Balance::getUserExpenseCategories(),
-            'payments' => Balance::getUserPaymentMethods(),
+            'user_expenses' => User::getUserExpenseCategories(),
+            'payments' => User::getUserPaymentMethods(),
             'min_date' => Dates::getMinDate(), 
             'max_date' => Dates::getMaxDate() 
         ]);
