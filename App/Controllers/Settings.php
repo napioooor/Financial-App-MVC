@@ -17,9 +17,9 @@ class Settings extends Authenticated {
     public function showAction(){
         View::renderTemplate('Settings/show.html', [
             'user' => $this -> user,
-            'user_expense_categories' => Balance::getUserExpenseCategories(),
-            'payments' => Balance::getUserPaymentMethods(),
-            'user_income_categories' => Balance::getUserIncomeCategories()
+            'user_expense_categories' => User::getUserExpenseCategories(),
+            'payments' => User::getUserPaymentMethods(),
+            'user_income_categories' => User::getUserIncomeCategories()
         ]);
     }
 /*

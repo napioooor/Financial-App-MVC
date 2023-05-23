@@ -539,7 +539,7 @@ class User extends \Core\Model {
         } else return false;
     }
 
-    public function getExpenseLimits(){
+    public static function getExpenseLimits(){
         $sql = 'SELECT name, monthly_limit FROM expense_category WHERE user_id = :user_id';
 
         $db = static::getDB();
@@ -551,7 +551,7 @@ class User extends \Core\Model {
         return $stmt -> fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getPaymentLimits(){
+    public static function getPaymentLimits(){
         $sql = 'SELECT name, monthly_limit FROM payment WHERE user_id = :user_id';
 
         $db = static::getDB();

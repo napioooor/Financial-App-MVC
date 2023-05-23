@@ -28,7 +28,7 @@ class Router {
     public function match($url){
         //$reg_exp = "/^(?P<controller>[a-z-]+)\/(?P<action>[a-z-]+)$/";
 
-        foreach($this -> routes as $route => $params){
+        foreach($this -> routes as $route => $params){ 
             if(preg_match($route, $url, $matches)){
             //$params = [];
 
@@ -62,7 +62,7 @@ class Router {
                 $controller_object = new $controller($this -> params);
 
                 $action = $this -> params['action'];
-                $action = $this -> canvertToCamelCase($action);
+                $action = $this -> convertToCamelCase($action);
 
                 if(preg_match('/action$/i', $action) == 0){
                     $controller_object -> $action();
@@ -82,7 +82,7 @@ class Router {
         return str_replace(' ', '', ucwords(str_replace('-', ' ', $string)));
     }
 
-    protected function canvertToCamelCase($string){
+    protected function convertToCamelCase($string){
         return lcfirst($this -> convertToStudlyCaps($string));
     }
 
