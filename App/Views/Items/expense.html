@@ -42,6 +42,12 @@
                 <td><textarea name="comment" id="comment" cols="30" rows="3" class="form-control m-1"></textarea></td>
             </tr>
         </table>
+        <div class="alert d-none" role="alert" id="alert-expense">
+
+        </div>
+        <div class="alert d-none" role="alert" id="alert-payment">
+
+        </div>
         <div class="d-flex flex-row justify-content-center align-items-center mt-3">
             <button type="submit" class="btn btn-dark">Zatwierd&zacute;</button>
             <a href="/" class="ml-3">Anuluj</a>
@@ -50,61 +56,59 @@
 {% endblock %}
 
 {% block footer %}
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script type="text/javascript">
         const getUserExpenseLimits = async () => {
             try {
-            const expenseLimits = await axios.get("/ApiControls/getExpenseLimits");
-            
-            return expenseLimits.data;
-            } catch (e) {
-            console.log("Error: ", e);
+                const expenseLimits = await fetch('/ApiControls/getExpenseLimits');
+                return expenseLimits.json();
+            } catch (error) {
+                console.log('Error:', error);
             }
         };
 
         const getUserPaymentLimits = async () => {
             try {
-            const paymentLimits = await axios.get("/ApiControls/getPaymentLimits");
-            
-            return paymentLimits.data;
-            } catch (e) {
-            console.log("Error: ", e);
+                const paymentLimits = await fetch('/ApiControls/getPaymentLimits');
+                return paymentLimits.json();
+            } catch (error) {
+                console.log('Error:', error);
             }
         };
 
         const getUserExpenses = async (date) => {
             try {
-            const expenses = await axios.get(`/ApiControls/${date}/getExpenseSums`);
-            
-            return expenses.data;
-            } catch (e) {
-            console.log("Error: ", e);
+                const expenses = await fetch(`/ApiControls/${date}/getExpenseSums`);
+                return expenses.json();
+            } catch (error) {
+                console.log('Error:', error);
             }
         };
 
         const getUserPayments = async (date) => {
             try {
-            const payments = await axios.get(`/ApiControls/${date}/getPaymentSums`);
-            
-            return payments.data;
-            } catch (e) {
-            console.log("Error: ", e);
+                const payments = await fetch(`/ApiControls/${date}/getPaymentSums`);
+                return payments.json();
+            } catch (error) {
+                console.log('Error:', error);
             }
         };
 
-
         let expenseLimits = [];
-        getUserExpenseLimits().then((data) => {
-            expenseLimits = data;
-        }).catch((error) => {
-            console.log("Error: ", error);
+        getUserExpenseLimits()
+            .then((data) => {
+                expenseLimits = data;
+            })
+            .catch((error) => {
+                console.log('Error:', error);
         });
 
         let paymentLimits = [];
-        getUserPaymentLimits().then((data) => {
-            paymentLimits = data;
-        }).catch((error) => {
-            console.log("Error: ", error);
+        getUserPaymentLimits()
+            .then((data) => {
+                paymentLimits = data;
+            })
+            .catch((error) => {
+                console.log('Error:', error);
         });
 
         const formAmount = document.querySelector('#amount');
@@ -112,74 +116,63 @@
         const formCategory = document.querySelector('#category');
         const formPayment = document.querySelector('#payment');
 
-        // Funkcja do sprawdzania limitu i wyświetlania komunikatów
         const checkExpenseLimit = (amount, date, category, payment) => {
-            const formattedDate = formatDate(date); // Formatuj datę do "YYYY-MM-DD"
+            hideAlert('alert-expense');
+            hideAlert('alert-payment');
 
-            // Znajdź limit dla wybranej kategorii i płatności
+            const formattedDate = formatDate(date);
+
             const expenseLimit = expenseLimits.find((limit) => limit.name === category);
             const paymentLimit = paymentLimits.find((limit) => limit.name === payment);
 
-            if (expenseLimit.monthly_limit === null && paymentLimit.monthly_limit == null) {
+            if (expenseLimit.monthly_limit === null && paymentLimit.monthly_limit === null) {
                 console.log('Brak limitów dla wybranej kategorii i płatności');
                 return;
             }
 
-            // Sprawdzanie limitu dla kategorii, jeśli istnieje
             if (expenseLimit.monthly_limit !== null) {
-                // Pobierz sumy dotychczasowych wydatków dla danej daty i kategorii
-                getUserExpenses(formattedDate).then((expenses) => {
-                        // Oblicz sumę wydatków dla wybranej kategorii
-                        const expenseSum = expenses.find((expense) => expense.category === category)?.sum || 0;
+                getUserExpenses(formattedDate)
+                    .then((expenses) => {
+                        const expenseSum = expenses.find((expense) => expense.category === category)?.['SUM(amount)'] || 0;
 
-                        // Sprawdź czy podana kwota zsumowana z dotychczasowymi wydatkami/płatnościami przekracza limity
                         const totalExpenseSum = Number(expenseSum) + Number(amount);
 
-                        // Wyświetl komunikaty dla kategorii i płatności
                         if (totalExpenseSum > expenseLimit.monthly_limit) {
-                            console.log('Kwota przekracza limit dla kategorii', category);
-                        // Dodaj odpowiednią klasę CSS dla pola formularza (np. zmień kolor na czerwony)
-                        } else if (totalExpenseSum === expenseLimit.monthly_limit) {
-                            console.log('Kwota jest równa limitowi dla kategorii', category);
-                        // Dodaj odpowiednią klasę CSS dla pola formularza (np. zmień kolor na pomarańczowy)
+                        const diff = totalExpenseSum - expenseLimit.monthly_limit;
+                        showAlert('alert-danger', 'alert-expense', diff);
+                        } else if (totalExpenseSum == expenseLimit.monthly_limit) {
+                        showAlert('alert-warning', 'alert-expense', null);
                         } else {
-                            console.log('Kwota mieści się w limicie dla kategorii', category);
-                        // Dodaj odpowiednią klasę CSS dla pola formularza (np. zmień kolor na zielony)
+                        showAlert('alert-success', 'alert-expense', null);
                         }
-                }).catch((error) => {
-                    console.log("Error while fetching expenses:", error);
+                    })
+                    .catch((error) => {
+                        console.log('Error while fetching expenses:', error);
                 });
             }
 
-            // Sprawdzanie limitu dla płatności, jeśli istnieje
             if (paymentLimit.monthly_limit !== null) {
-                // Pobierz sumy dotychczasowych płatności dla danej daty i kategorii
-                getUserPayments(formattedDate).then((payments) => {
-                        // Oblicz sumę wydatków dla wybranej kategorii
-                        const paymentSum = payments.find((payments) => payments.payment === payment)?.sum || 0;
+                getUserPayments(formattedDate)
+                    .then((payments) => {
+                        const paymentSum = payments.find((payment) => payment.payment === payment)?.['SUM(amount)'] || 0;
 
-                        // Sprawdź czy podana kwota zsumowana z dotychczasowymi wydatkami/płatnościami przekracza limity
                         const totalPaymentSum = Number(paymentSum) + Number(amount);
 
-                        // Wyświetl komunikaty dla kategorii i płatności
                         if (totalPaymentSum > paymentLimit.monthly_limit) {
-                            console.log('Kwota przekracza limit dla kategorii', payment);
-                        // Dodaj odpowiednią klasę CSS dla pola formularza (np. zmień kolor na czerwony)
-                        } else if (totalPaymentSum === paymentLimit.monthly_limit) {
-                            console.log('Kwota jest równa limitowi dla kategorii', payment);
-                        // Dodaj odpowiednią klasę CSS dla pola formularza (np. zmień kolor na pomarańczowy)
+                        const diff = totalPaymentSum - paymentLimit.monthly_limit;
+                        showAlert('alert-danger', 'alert-payment', diff);
+                        } else if (totalPaymentSum == paymentLimit.monthly_limit) {
+                        showAlert('alert-warning', 'alert-payment', null);
                         } else {
-                            console.log('Kwota mieści się w limicie dla kategorii', payment);
-                        // Dodaj odpowiednią klasę CSS dla pola formularza (np. zmień kolor na zielony)
+                        showAlert('alert-success', 'alert-payment', null);
                         }
-                }).catch((error) => {
-                    console.log("Error while fetching payments:", error);
+                    })
+                    .catch((error) => {
+                        console.log('Error while fetching payments:', error);
                 });
             }
         };
-        
 
-        // Nasłuchiwacz zdarzeń dla pola amount
         formAmount.addEventListener('change', () => {
             const amount = formAmount.value;
             const date = formDate.value;
@@ -188,7 +181,6 @@
             checkExpenseLimit(amount, date, category, payment);
         });
 
-        // Nasłuchiwacz zdarzeń dla pola date
         formDate.addEventListener('change', () => {
             const amount = formAmount.value;
             const date = formDate.value;
@@ -197,7 +189,6 @@
             checkExpenseLimit(amount, date, category, payment);
         });
 
-        // Nasłuchiwacz zdarzeń dla pola category
         formCategory.addEventListener('change', () => {
             const amount = formAmount.value;
             const date = formDate.value;
@@ -206,7 +197,6 @@
             checkExpenseLimit(amount, date, category, payment);
         });
 
-        // Nasłuchiwacz zdarzeń dla pola payment
         formPayment.addEventListener('change', () => {
             const amount = formAmount.value;
             const date = formDate.value;
@@ -215,7 +205,6 @@
             checkExpenseLimit(amount, date, category, payment);
         });
 
-        // Formatuj datę do "YYYY-MM-DD"
         const formatDate = (dateString) => {
             const dateObj = new Date(dateString);
             const year = dateObj.getFullYear();
@@ -223,6 +212,44 @@
             const day = String(dateObj.getDate()).padStart(2, '0');
             return `${year}-${month}-${day}`;
         };
+
+        function showAlert(type, id, amount) {
+            const alertElement = document.getElementById(id);
+
+            alertElement.classList.remove('alert-danger', 'alert-warning', 'alert-success');
+
+            if (id === 'alert-expense') {
+                if (type === 'alert-danger') {
+                alertElement.classList.add('alert-danger');
+                alertElement.textContent = 'Kwota przekracza limit dla kategorii o: ' + amount;
+                } else if (type === 'alert-warning') {
+                alertElement.classList.add('alert-warning');
+                alertElement.textContent = 'Kwota zrównuje się limitowi dla kategorii';
+                } else if (type === 'alert-success') {
+                alertElement.classList.add('alert-success');
+                alertElement.textContent = 'Kwota mieści się w limicie dla kategorii';
+                }
+            } else {
+                if (type === 'alert-danger') {
+                alertElement.classList.add('alert-danger');
+                alertElement.textContent = 'Kwota przekracza limit dla sposobu płatności o: ' + amount;
+                } else if (type === 'alert-warning') {
+                alertElement.classList.add('alert-warning');
+                alertElement.textContent = 'Kwota zrównuje się limitowi dla sposobu płatności';
+                } else if (type === 'alert-success') {
+                alertElement.classList.add('alert-success');
+                alertElement.textContent = 'Kwota mieści się w limicie dla sposobu płatności';
+                }
+            }
+
+            alertElement.classList.remove('d-none');
+        }
+
+        function hideAlert(id) {
+            const alertElement = document.getElementById(id);
+
+            alertElement.classList.add('d-none');
+        }
 
     </script>
 {% endblock %}
